@@ -1,0 +1,42 @@
+{
+  "name": "dsh-babeldoc-pdf-translator",
+  "version": "1.0.0",
+  "description": "DSH plugin: PDF bilingual reader in the conversation UI — BabelDOC translation engine, parallel queues, per-page cache, document Q&A, translation export",
+  "type": "module",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./client": {
+      "default": "./lib/client.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/index.js",
+    "lib/client.js",
+    "lib/types/**/*.d.ts"
+  ],
+  "dsh": {
+    "client": {
+      "platform": "web",
+      "inject": [
+        "slots",
+        "remote",
+        "remote.babeldoc",
+        "timer"
+      ]
+    }
+  },
+  "scripts": {
+    "build": "node scripts/build.js"
+  },
+  "license": "MIT",
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.1",
+    "@deepseek-ai/dsh-typert-protocol": "^0.1.0-rc.6"
+  }
+}
