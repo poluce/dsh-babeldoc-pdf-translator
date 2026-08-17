@@ -13,18 +13,14 @@
 - 🗂 **目录页识别**：自动识别目录页（点线 + 右对齐页码），目录页单页翻译后自动修复页码排版
 - 💬 **文档问答**：基于 DSH 内置 LLM 服务，按当前页优先注入上下文，回答附带页码引用
 - ⇩ **导出译文 PDF**：下载翻译完成的完整 PDF
-- ⚙ **设置面板**：API Base URL / API Key / 翻译模型 / 目标语言 / 问答模型 / 自定义系统提示词 / 清空缓存 / 环境检查
+- ⚙ **设置面板**：API Base URL / API Key / 翻译模型 / 目标语言 / 问答模型 / 自定义系统提示词 / 清空缓存 / 环境检查 / 一键安装缺失依赖
 
 ## 🚀 安装（一键，无需复制代码）
 
 ### 环境要求
 
 - DSH（DeepSeek Harness），web profile
-- Python 3.10+，且已安装：
-
-```bash
-pip install babeldoc pymupdf openai httpx peewee
-```
+- Python 3.10+（未装 Python 依赖也不用怕：打开面板后 设置 → 更多设置 →「⚙ 一键安装缺失依赖」可自动 pip 安装 `babeldoc pymupdf openai httpx peewee`）
 
 ### 安装步骤
 
@@ -53,7 +49,7 @@ dsh plugin --profile web add github:poluce/dsh-babeldoc-pdf-translator
 1. 点击「📄 双语PDF」打开面板
 2. ⚙ 设置 → 粘贴**你自己的** OpenCode Go API Key（`https://opencode.ai/zen/go/v1`），选择翻译模型（默认 `deepseek-v4-flash`）
 3. 打开 PDF → 自动开始逐页翻译；也可点「翻译当前页」或「翻译全部」
-4. 设置 → 更多设置 →「🔍 环境检查」可一键确认 Python 依赖是否齐全
+4. 设置 → 更多设置 →「🔍 环境检查」一键确认 Python 依赖是否齐全；若缺失，点「⚙ 一键安装缺失依赖」自动补装
 
 > 插件**不内置任何密钥**。API Key 仅保存在使用者的浏览器 localStorage 中，不会写入插件或仓库。
 
@@ -61,7 +57,7 @@ dsh plugin --profile web add github:poluce/dsh-babeldoc-pdf-translator
 
 | 环节 | 实现 |
 |---|---|
-| 架构 | 标准 DSH 双半区插件：Host = `TypertRemoteService`（`babeldoc` 命名空间，17 个 Remote 方法），Client = `__ModuleLoader__` 模块（`ctx.remote.babeldoc.*` 直调） |
+| 架构 | 标准 DSH 双半区插件：Host = `TypertRemoteService`（`babeldoc` 命名空间，18 个 Remote 方法），Client = `__ModuleLoader__` 模块（`ctx.remote.babeldoc.*` 直调） |
 | PDF 解析 | 内嵌 `parse_pdf.py`（pymupdf），支持文件路径与 base64 stdin 两种输入 |
 | BabelDOC 调用 | 内嵌 `babeldoc_run.py`：补丁 httpx/openai UA 防 Cloudflare 403、peewee busy_timeout + 重试、启动前预热 SQLite 缓存库（WAL）解决 4 路并行锁竞争 |
 | 目录页修复 | 内嵌 `fix_toc.py`：还原右对齐页码与点线引导 |
@@ -72,7 +68,7 @@ dsh plugin --profile web add github:poluce/dsh-babeldoc-pdf-translator
 ## 📦 包结构
 
 ```
-lib/index.js   # Host 半区：BabeldocService（17 个 Remote 方法 + 内嵌 Python 辅助脚本）
+lib/index.js   # Host 半区：BabeldocService（18 个 Remote 方法 + 内嵌 Python 辅助脚本）
 lib/client.js  # Client 半区：双栏阅读器 UI、4 路并行队列、设置抽屉
 package.json   # dsh.client 元数据（platform/inject）+ exports["./client"]
 ```
