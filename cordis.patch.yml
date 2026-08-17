@@ -1,0 +1,7 @@
+# dsh-babeldoc-pdf-translator bundle patch
+# Declared via package.json `dsh.bundle.patch`; `dsh plugin --profile web add`
+# mounts this layer automatically — no manual cordis.patch.yml editing needed.
+
+- insert:
+    - id: babeldoc-pdf
+      name: 'dsh-babeldoc-pdf-translator'

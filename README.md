@@ -15,7 +15,7 @@
 - ⇩ **导出译文 PDF**：下载翻译完成的完整 PDF
 - ⚙ **设置面板**：API Base URL / API Key / 翻译模型 / 目标语言 / 问答模型 / 自定义系统提示词 / 清空缓存 / 环境检查 / 一键安装缺失依赖
 
-## 🚀 安装（一键，无需复制代码）
+## 🚀 安装（真正的一条命令）
 
 ### 环境要求
 
@@ -24,25 +24,19 @@
 
 ### 安装步骤
 
-**1. 用 DSH 官方插件命令安装**（等价于把包加入 profile 依赖）：
+**只需一条命令**，插件会作为标准 DSH bundle 自动挂载（`dsh plugin` 会自动写入 `dsh.profile.bundles`，无需手动编辑任何配置文件）：
 
 ```bash
-# 从 npm（发布后）
-dsh plugin --profile web add dsh-babeldoc-pdf-translator
-
-# 或直接从本仓库安装
+# 从 GitHub 安装
 dsh plugin --profile web add github:poluce/dsh-babeldoc-pdf-translator
+
+# 或发布到 npm 之后
+dsh plugin --profile web add dsh-babeldoc-pdf-translator
 ```
 
-**2. 在 profile 的 `cordis.patch.yml` 挂载一行**：
+然后**重启 DSH web**，会话头部出现「📄 双语PDF」按钮即可使用。
 
-```yaml
-- insert:
-    - id: babeldoc-pdf
-      name: 'dsh-babeldoc-pdf-translator'
-```
-
-**3. 重启 DSH web**，会话头部出现「📄 双语PDF」按钮。
+> 无需复制代码、无需编辑 `cordis.patch.yml`、无需手动挂载——包自带 `cordis.patch.yml` 并通过 `package.json` 的 `dsh.bundle.patch` 声明，安装命令自动完成挂载。
 
 ### 首次使用
 
@@ -68,9 +62,10 @@ dsh plugin --profile web add github:poluce/dsh-babeldoc-pdf-translator
 ## 📦 包结构
 
 ```
-lib/index.js   # Host 半区：BabeldocService（18 个 Remote 方法 + 内嵌 Python 辅助脚本）
-lib/client.js  # Client 半区：双栏阅读器 UI、4 路并行队列、设置抽屉
-package.json   # dsh.client 元数据（platform/inject）+ exports["./client"]
+lib/index.js       # Host 半区：BabeldocService（18 个 Remote 方法 + 内嵌 Python 辅助脚本）
+lib/client.js      # Client 半区：双栏阅读器 UI、4 路并行队列、设置抽屉
+cordis.patch.yml   # bundle 挂载层（由 dsh plugin add 自动应用）
+package.json       # dsh.client + dsh.bundle.patch + exports["./client"]
 ```
 
 ## ⚠️ 注意
