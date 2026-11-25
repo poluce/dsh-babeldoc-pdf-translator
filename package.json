@@ -1,7 +1,7 @@
 {
   "name": "dsh-babeldoc-pdf-translator",
   "version": "2.0.0",
-  "description": "DSH plugin: a left-sidebar bilingual PDF reader — BabelDOC translation, per-page cache, document Q&A, PDF export",
+  "description": "DSH plugin: bilingual PDF reader in the right sidebar, with the DSH conversation kept in the center",
   "type": "module",
   "main": "lib/index.js",
   "exports": {
@@ -38,6 +38,7 @@
       "immediately": true,
       "inject": [
         "@deepseek-ai/dsh-client-ui-sidebar",
+        "@deepseek-ai/dsh-client-ui-sidebar-right",
         "@deepseek-ai/dsh-client-ui-layout",
         "@deepseek-ai/dsh-client-locale"
       ]

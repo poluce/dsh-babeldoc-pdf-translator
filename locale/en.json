@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Bilingual PDF",
-    "description": "Opens PDFs in a left-sidebar page: BabelDOC translation rendered page by page beside the original, with resumable per-page cache, document Q&A and translated-PDF export.",
+    "description": "The left-sidebar Bilingual PDF entry opens a standalone reader with no chat column. The session-header button and the right-sidebar add menu open a separate reader beside the current conversation. Each keeps its own document. Per-page cache and translated-PDF export.",
     "detail": "docs/DETAIL.md"
   }
 }

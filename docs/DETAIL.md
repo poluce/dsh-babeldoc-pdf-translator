@@ -1,10 +1,10 @@
 # 双语 PDF
 
-在左侧栏打开 PDF，左边原文、右边 BabelDOC 译文，逐页对照阅读。
+左侧栏「双语 PDF」打开独立阅读页，左右对照，不带聊天栏。会话顶栏或右栏加号则在右侧栏另开一份，中间保持当前对话。两处各记各的文档。
 
 ## 使用
 
-1. 左侧栏点击「双语 PDF」。
+1. 左侧栏「双语 PDF」进入独立阅读页。若要边看边在当前对话里提问，用会话顶栏或右栏加号里的「双语 PDF」，那是另一份阅读器。
 2. 首次使用先在「设置」里点「安装依赖」。插件会在自己的数据目录
    （`%USERPROFILE%\.dsh\babeldoc`，即 `DSH_HOME/babeldoc`）创建独立 Python 虚拟环境，
    并安装 `babeldoc pymupdf openai httpx peewee`；不会改动系统 Python。
@@ -22,7 +22,7 @@
 - 页面图像由 Host 用 PyMuPDF 渲染为 PNG，浏览器不需要加载 pdf.js 或访问 CDN。
 - 翻译按批调用 BabelDOC（每批多页），完成后拆回单页缓存；
   目录页会自动识别并修复右对齐页码与点线。
-- 文档问答使用 DSH 内置 LLM 服务，按当前页优先组织上下文，回答标注来源页码。
+- 提问用中间的 DSH 对话，阅读器不自带聊天栏。右栏较窄时原文在上、译文在下，两栏都保持可见。
 - 所有能力通过 `/babeldoc/api` 的同源 HTTP 接口提供，不依赖动态 Remote 命名空间。
 - BabelDOC 请求发往插件自身暴露的 OpenAI 兼容桥
   `/babeldoc/api/llm/<provider>/<model>/v1/chat/completions`，由 Host 转给 `ctx.llm.stream`。

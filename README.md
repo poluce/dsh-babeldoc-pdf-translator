@@ -1,15 +1,15 @@
 # dsh-babeldoc-pdf-translator
 
-> DSH（DeepSeek Harness）插件：左侧栏「双语 PDF」入口，左侧原文、右侧 BabelDOC 译文逐页对照阅读，支持断点续翻的逐页缓存、文档问答与译文 PDF 导出。
+> DSH（DeepSeek Harness）插件：在当前会话的右侧栏打开「双语 PDF」，原文与 BabelDOC 译文对照，中间保持 DSH 对话。支持断点续翻的逐页缓存与译文 PDF 导出。
 
 ## 功能
 
-- **左侧栏入口**：注册 `sidebar.panellist` 图标与 `main` 页面，点侧栏行进入整页阅读器
+- **右侧栏标签**：注册 `sidebarRightTabs` 类型 `babeldoc-pdf`，正文在 `sidebar.right.pane.tab`。中间始终是当前 DSH 会话，不把阅读器做成会替换对话的主面板
 - **服务端渲染**：原文与译文都由 Host 用 PyMuPDF 渲染成 PNG，浏览器不需要 pdf.js、不访问 CDN
 - **BabelDOC 分批翻译**：每批多页、多个批次并行，可随时停止；每页译文单独落盘，中断后继续不会重复调用模型
 - **目录页修复**：自动识别目录页，翻译后修复右对齐页码与点线
 - **导出译文 PDF**：把已缓存译文页与未翻译原文页合成一份 PDF
-- **文档问答**：走 DSH 内置 LLM 服务，按当前页优先组织上下文，回答标注来源页码
+- **提问**：直接用中间的 DSH 对话。阅读器不再自带聊天栏，避免和真会话来回切换
 - **模型来源**：只使用 DSH 里已配置的模型渠道（默认 commandcode / DeepSeek V4.1 Flash），不另填 Key
 - **环境自管理**：首次使用在插件数据目录创建独立 Python venv 并安装依赖，不污染系统 Python
 
@@ -22,11 +22,15 @@
 
 其他 profile：`dsh plugin --profile <profile> add <本地目录或 npm 包名>`。
 
-安装后刷新页面（`Ctrl+Shift+R`），左侧栏出现「双语 PDF」。
+安装后刷新页面（`Ctrl+Shift+R`）。先打开一个会话，然后用下面任一入口，PDF 出现在右侧，对话留在中间：
+
+- 会话顶栏的「双语 PDF」
+- 右栏标签条上的加号，选「双语 PDF」
+- 左侧栏「双语 PDF」：进入独立阅读页，左右对照，不带右侧聊天栏。这一页和右栏标签各记各的文档，不会互相卸载
 
 ## 首次使用
 
-1. 打开左侧栏「双语 PDF」→ 设置 → **安装依赖**。插件会在 `DSH_HOME/babeldoc/venv` 创建虚拟环境并安装
+1. 打开右侧「双语 PDF」→ 设置 → **安装依赖**。插件会在 `DSH_HOME/babeldoc/venv` 创建虚拟环境并安装
    `babeldoc pymupdf openai httpx peewee`（依赖较多，首次需要联网，可能数分钟到十几分钟）。
 2. 设置里的「模型」：
    - 列出 DSH「模型渠道」里配置的**全部** provider 与模型，可在设置里选，也可在顶部工具栏直接切换；新增渠道后点「刷新模型列表」
@@ -39,13 +43,13 @@
 |---|---|
 | 包形态 | 标准 DSH bundle：`package.json` 声明 `dsh.bundle.patch` + `dsh.client`，`cordis.patch.yml` 插入一行 |
 | Host | 普通 Cordis 插件：在 `webServer` 上注册 `/babeldoc` 前缀的同源 HTTP API；文档与缓存由 Node `fs` 管理；Python 通过 `subprocess` 服务启动 |
-| Client | 单文件 `window.__ModuleLoader__` 模块：`sidebar.panellist` 图标 + `main` 页面，`fetch` 调用 Host API |
+| Client | 左栏 `main` 页和右栏标签是两套阅读器实例，文档记录分开。左栏页不跳去右栏，也不带聊天栏 |
 | 页面渲染 | `python/render_page.py`：PyMuPDF 按目标宽度渲染 PNG，磁盘缓存 |
 | 翻译 | `python/babeldoc_run.py`：BabelDOC CLI 分批输出 mono PDF，`split_pages.py` 拆回逐页缓存 |
 | 模型桥接 | Host 暴露 OpenAI 兼容的 `/babeldoc/api/llm/<provider>/<model>/v1/chat/completions`，把 BabelDOC 的请求转给 `ctx.llm.stream`；批量 JSON 请求通过 `submit_translations` 工具提交，校验失败以工具错误返回让模型重规划，`reasoningEffort` 固定 `off` |
 | 语言识别 | 首次翻译时把前 3 页文本交给当前模型判断源语言并缓存，用户只需选择目标语言 |
 | 目录修复 | `python/toc_pages.py` 识别 + `python/fix_toc.py` 重排 |
-| 文档问答 | Host `ctx.llm` 流式调用，`python/extract_text.py` 取上下文 |
+| 提问 | 使用中间的 DSH 会话，不在阅读器里再嵌一套聊天 |
 | Python 环境 | `lib/python.js`：独立 venv、依赖探测、pip 安装、脚本按包内路径执行 |
 
 ### 为什么不用 `ctx.remote`
