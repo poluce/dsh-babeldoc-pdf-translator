@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "Bilingual PDF",
+    "description": "Opens PDFs in a left-sidebar page: BabelDOC translation rendered page by page beside the original, with resumable per-page cache, document Q&A and translated-PDF export.",
+    "detail": "docs/DETAIL.md"
+  }
+}

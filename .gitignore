@@ -1,0 +1,6 @@
+node_modules/
+_test/
+_old_python/
+_old_client.css
+*.log
+__pycache__/

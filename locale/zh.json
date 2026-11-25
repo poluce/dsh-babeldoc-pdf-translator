@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "双语 PDF",
+    "description": "在左侧栏页面中打开 PDF：左侧原文、右侧 BabelDOC 逐页译文对照阅读，支持断点续翻的逐页缓存、文档问答与译文 PDF 导出。",
+    "detail": "docs/DETAIL.md"
+  }
+}

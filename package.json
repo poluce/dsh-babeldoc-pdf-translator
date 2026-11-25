@@ -1,7 +1,7 @@
 {
   "name": "dsh-babeldoc-pdf-translator",
-  "version": "1.0.0",
-  "description": "DSH plugin: PDF bilingual reader in the conversation UI — BabelDOC translation engine, parallel queues, per-page cache, document Q&A, translation export",
+  "version": "2.0.0",
+  "description": "DSH plugin: a left-sidebar bilingual PDF reader — BabelDOC translation, per-page cache, document Q&A, PDF export",
   "type": "module",
   "main": "lib/index.js",
   "exports": {
@@ -11,12 +11,23 @@
     "./client": {
       "default": "./lib/client.js"
     },
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg",
     "./package.json": "./package.json"
   },
   "files": [
     "lib/index.js",
+    "lib/api.js",
+    "lib/docs.js",
+    "lib/jobs.js",
+    "lib/python.js",
     "lib/client.js",
-    "cordis.patch.yml"
+    "python",
+    "locale",
+    "docs",
+    "cordis.patch.yml",
+    "icon.svg",
+    "README.md"
   ],
   "dsh": {
     "bundle": {
@@ -24,17 +35,13 @@
     },
     "client": {
       "platform": "web",
+      "immediately": true,
       "inject": [
-        "slots",
-        "remote",
-        "remote.babeldoc",
-        "timer"
+        "@deepseek-ai/dsh-client-ui-sidebar",
+        "@deepseek-ai/dsh-client-ui-layout",
+        "@deepseek-ai/dsh-client-locale"
       ]
     }
   },
-  "license": "MIT",
-  "peerDependencies": {
-    "@deepseek-ai/cordis": "^4.0.1",
-    "@deepseek-ai/dsh-typert-protocol": "^0.1.0-rc.6"
-  }
+  "license": "MIT"
 }
